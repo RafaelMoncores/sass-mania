@@ -71,22 +71,24 @@ Rails.application.configure do
   # config.active_job.queue_adapter = :resque
   # config.active_job.queue_name_prefix = "sass_mania_production"
 
-  config.action_mailer.perform_caching = false # Se você não precisar de cache para e-mails
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              'smtp.sendgrid.net',
     port:                 '587',
-    domain:               ENV.fetch('SENDGRID_DOMAIN', 'heroku.com'),
-    user_name:            'apikey', # Permanece 'apikey'
-    password:             ENV['SENDGRID_API_KEY'], # O nome da variável de ambiente no Heroku
+    domain:               ENV.fetch('SENDGRID_DOMAIN', 'heroku.com'), # Pega do ENV, com fallback
+    user_name:            'apikey', # Usando SendGrid API Key
+    password:             ENV['SENDGRID_PASSWORD'], # Ou ENV['SENDGRID_API_KEY'] dependendo do que você definiu
     authentication:       'plain',
     enable_starttls_auto: true
   }
-
-  # Host para gerar URLs nos e-mails (CRUCIAL para Devise)
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: 'sass-mania-888942cfb641.herokuapp.com', protocol: 'https' }
+  config.action_mailer.perform_caching = false
 
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
